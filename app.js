@@ -1,16 +1,13 @@
-const express  = require('express')
-const routes   = require('./routes')
-
-//ROUTES REQUIRE
-// const userRoutes = require('./routes/users')
-
-const mongoose = require('mongoose')
-const cors     = require('cors')
 require('dotenv').config()
-const app = express()
-const port = 3000
 
-mongoose.connect('mongodb://localhost/dummydb', { useNewUrlParser: true });
+const express = require('express')
+const app = express()
+const port = process.env.PORT || 3000
+const mongoose = require('mongoose')
+const cors = require('cors')
+const routes = require('./routes/index')
+
+mongoose.connect('mongodb://localhost/gif-you-smile', { useNewUrlParser: true });
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'mongo failed to connect:'));
@@ -24,7 +21,6 @@ app.use(express.json())
 
 //ROUTES
 app.use('/', routes)
-// app.use('/users',userRoutes)
 
 app.listen(port, function(){
     console.log('Listening on port', port)
