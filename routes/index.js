@@ -25,5 +25,7 @@ router.post('/upload',
 
 router.get('/', GifController.read);
 
+router.post('/download',GifController.downloadGif)
+
 module.exports = router
 
