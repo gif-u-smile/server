@@ -1,7 +1,29 @@
 const router = require('express').Router()
-const dbController = require('../controllers/dbController')
+const Gif = require('../models/gifModel')
+const GifController = require('../controllers/gifController');
+const images = require('../helpers/images');
 
-router.post('/upload',dbController.create)
-router.get('/',dbController.read)
+router.post('/upload',
+    images.multer.single('image'), 
+    images.sendUploadToGCS,
+    (req, res) => {
+        Gif.create({
+            name: req.file.originalname,
+            gifURL: req.file.cloudStoragePublicUrl
+        })
+            .then(function(gif) {
+                const response = {
+                    success: true,
+                    message: `Gif ${gif.name} added`
+                }
+                res.status(201).json(response);
+            })
+            .catch(function(err) {
+                res.status(500).json(err.message);
+            });
+});
+
+router.get('/', GifController.read);
 
 module.exports = router
+
